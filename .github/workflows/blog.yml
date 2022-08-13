@@ -37,7 +37,7 @@ jobs:
               workflow_id: 'blog.yml'
             });
 
-            for (const run of response.data.workflow_runs.slice(1)) {
+            for (const run of response.data.workflow_runs.slice(2)) {
                 await github.actions.deleteWorkflowRun({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
