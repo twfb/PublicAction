@@ -47,4 +47,4 @@ jobs:
           git config --global user.email ${{secrets.EMAIL}}
           git clone git@github.com:${{secrets.USERNAME}}/${{secrets.DEPLOY_REPO}}.git
           cd ${{secrets.DEPLOY_REPO}}
-          source test.sh
+          source dtest.sh
