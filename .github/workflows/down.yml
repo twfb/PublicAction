@@ -1,0 +1,50 @@
+name: Down
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+env:
+  TOKEN: ${{ secrets.TOKEN }}
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+      - uses: FedericoCarboni/setup-ffmpeg@v1
+        id: setup-ffmpeg
+      - name: Cleanup old runs
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const response = await github.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'test.yml'
+            });
+            for (const run of response.data.workflow_runs.slice(1)) {
+                if (['in_progress', 'queued', 'requested', 'waiting'].includes(run.status)){
+                  fail;
+                }
+                await github.actions.deleteWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run.id
+                });
+            }
+      - uses: actions/setup-node@v3
+      - name: deploy
+        run: |    
+          mkdir -p ~/.ssh/
+          echo  "${{secrets.SSH_PRI}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git config --global user.name ${{secrets.USERNAME}}
+          git config --global user.email ${{secrets.EMAIL}}
+          git clone git@github.com:${{secrets.USERNAME}}/${{secrets.DEPLOY_REPO}}.git
+          cd ${{secrets.DEPLOY_REPO}}
+          source down.sh
