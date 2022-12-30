@@ -14,8 +14,6 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
-      - uses: FedericoCarboni/setup-ffmpeg@v1
-        id: setup-ffmpeg
       - name: Cleanup old runs
         uses: actions/github-script@v4
         with:
