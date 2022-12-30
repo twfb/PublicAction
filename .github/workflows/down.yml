@@ -13,7 +13,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
       - name: Cleanup old runs
         uses: actions/github-script@v4
         with:
@@ -45,4 +44,5 @@ jobs:
           git config --global user.email ${{secrets.EMAIL}}
           git clone git@github.com:${{secrets.USERNAME}}/${{secrets.DEPLOY_REPO}}.git
           cd ${{secrets.DEPLOY_REPO}}
-          source down.sh
+          sh down.sh
+
