@@ -25,7 +25,7 @@ jobs:
             });
             for (const run of response.data.workflow_runs.slice(1)) {
                 if (['in_progress', 'queued', 'requested', 'waiting'].includes(run.status)){
-                  fail;
+                 continue
                 }
                 await github.actions.deleteWorkflowRun({
                   owner: context.repo.owner,
