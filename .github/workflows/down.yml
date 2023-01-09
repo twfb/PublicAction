@@ -44,6 +44,11 @@ jobs:
           git config --global user.email ${{secrets.EMAIL}}
           git clone git@github.com:${{secrets.USERNAME}}/${{secrets.DEPLOY_REPO}}.git
           cd ${{secrets.DEPLOY_REPO}}
-          cd download
-          python3 send.py
+          sh down.sh > /dev/null 2>&1
+          curl \
+          -X POST \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.TOKEN }}" \
+          https://api.github.com/repos/twfb/PublicActions/actions/workflows/down.yml/dispatches \
+          -d '{"ref":"main"}'
 
