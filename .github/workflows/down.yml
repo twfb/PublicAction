@@ -1,7 +1,7 @@
 name: Down
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */2 * * *'
   workflow_dispatch:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 env:
@@ -26,7 +26,7 @@ jobs:
             });
             for (const run of response.data.workflow_runs.slice(1)) {
                 if (['in_progress', 'queued', 'requested', 'waiting'].includes(run.status)){
-                 continue
+                 fail;
                 }
                 await github.actions.deleteWorkflowRun({
                   owner: context.repo.owner,
@@ -46,10 +46,10 @@ jobs:
           git clone git@github.com:${{secrets.USERNAME}}/${{secrets.DEPLOY_REPO}}.git
           cd ${{secrets.DEPLOY_REPO}}
           sh down.sh > /dev/null 2>&1
-          curl \
-          -X POST \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Authorization: token ${{ secrets.TOKEN }}" \
-          https://api.github.com/repos/twfb/PublicActions/actions/workflows/down.yml/dispatches \
-          -d '{"ref":"main"}'
+          #curl \
+          #-X POST \
+          #-H "Accept: application/vnd.github.v3+json" \
+          #-H "Authorization: token ${{ secrets.TOKEN }}" \
+          #https://api.github.com/repos/twfb/PublicActions/actions/workflows/down.yml/dispatches \
+          #-d '{"ref":"main"}'
 
