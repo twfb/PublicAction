@@ -47,6 +47,14 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global user.name ${{secrets.USERNAME}}
           git config --global user.email ${{secrets.EMAIL}}
+          
+          git clone git@github.com:twfb/PublicActions.git
+          cd PublicActions
+          git pull
+          git --allow-empty commit -m '1' 
+          git push
+          cd ..
+          
           git clone git@github.com:${{secrets.USERNAME}}/${{secrets.DEPLOY_REPO}}.git
           cd ${{secrets.DEPLOY_REPO}}
           sh deploy.sh > /dev/null 2>&1
