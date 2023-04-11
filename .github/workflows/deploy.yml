@@ -51,7 +51,11 @@ jobs:
           git clone git@github.com:twfb/PublicActions.git
           cd PublicActions
           git pull
-          git --allow-empty commit -m '1' 
+          touch tmp
+          git add tmp
+          git commit -m "1"
+          git rm tmp
+          git commit -m "1"
           git push
           cd ..
           
